@@ -1,0 +1,40 @@
+{
+  "name": "qgenie",
+  "version": "1.0.0",
+  "description": "A powerful and customizable query builder for Mongoose, simplifying complex query construction with support for search, filter, sort, pagination, and population.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sheikhmohdnazmulhasan/qgenie.git"
+  },
+  "keywords": [
+    "mongoose",
+    "query-builder",
+    "mongo",
+    "query",
+    "pagination",
+    "search",
+    "filter",
+    "sort",
+    "typescript"
+  ],
+  "author": "Sheikh Mohammad Nazmul H. nazmulofficial@outloo.com",
+  "license": "MIT",
+  "homepage": "https://github.com/sheikhmohdnazmulhasan/qgenie#readme",
+  "bugs": {
+    "url": "https://github.com/sheikhmohdnazmulhasan/qgenie/issues"
+  },
+  "peerDependencies": {
+    "mongoose": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
