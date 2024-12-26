@@ -167,3 +167,13 @@ This example demonstrates how qgenie can handle complex queries with minimal cod
 - `populate(fields: string | string[] | Record<string, any>[]): this`
 - `async exec(): Promise<T[]>`
 - `async executeWithMetadata(): Promise<{ meta: { total: number, page: number, limit: number, totalPages: number }, data: T[] }>`
+
+## Usage and Distribution
+
+This project, image-pdf-upload-core, is completely free and open for use, modification, and distribution. There are no restrictions or licenses attached to this project. You are free to:
+
+- Use it for any purpose, commercial or non-commercial
+- Modify and adapt it to your needs
+- Distribute it in its original or modified form
+
+We appreciate acknowledgments and contributions, but they are not required. Feel free to use this project in any way that benefits you or your organization.
