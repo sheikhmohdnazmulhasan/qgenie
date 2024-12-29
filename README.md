@@ -98,6 +98,20 @@ Execute the query and get metadata:
 const { meta, data } = await queryBuilder.executeWithMetadata();
 ```
 
+### Aggregation
+
+Perform aggregation using qgenie:
+
+```typescript
+const aggregationPipeline = [
+  { $match: { status: "active" } },
+  { $group: { _id: "$category", total: { $sum: "$amount" } } },
+  { $sort: { total: -1 } },
+];
+
+const aggregatedResult = await queryBuilder.aggregate(aggregationPipeline);
+```
+
 ## Example
 
 Here's an example of a complex query string that demonstrates various features of qgenie:
@@ -151,9 +165,38 @@ const queryString = {
 };
 
 const products = await getProducts(queryString);
+console.log(products);
 ```
 
-This example demonstrates how qgenie can handle complex queries with minimal code, making your API endpoints more versatile and easier to maintain.
+### Aggregation Example
+
+Here's an example demonstrating how to use the aggregation feature:
+
+```typescript
+import { QueryBuilder } from "qgenie";
+import { Order } from "./your-order-model";
+
+async function getSalesData() {
+  const query = Order.find();
+  const queryBuilder = new QueryBuilder(query, {});
+
+  const aggregationPipeline = [
+    { $match: { status: "completed" } },
+    { $group: { _id: "$region", totalSales: { $sum: "$amount" } } },
+    { $sort: { totalSales: -1 } },
+  ];
+
+  const aggregatedResult = await queryBuilder.aggregate(aggregationPipeline);
+
+  return aggregatedResult;
+}
+
+// Usage
+const salesData = await getSalesData();
+console.log(salesData);
+```
+
+This example aggregates sales data by region, calculating the total sales amount for each region and sorting the results in descending order of total sales.
 
 ## API Reference
 
@@ -165,5 +208,6 @@ This example demonstrates how qgenie can handle complex queries with minimal cod
 - `sort(defaultSort: string): this`
 - `paginate(defaultLimit: number): this`
 - `populate(fields: string | string[] | Record<string, any>[]): this`
+- `aggregate(pipeline: Record<string, any>[]): Promise<any[]>`
 - `async exec(): Promise<T[]>`
 - `async executeWithMetadata(): Promise<{ meta: { total: number, page: number, limit: number, totalPages: number }, data: T[] }>`
