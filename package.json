@@ -1,6 +1,6 @@
 {
   "name": "qgenie",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A powerful and customizable query builder for Mongoose, simplifying complex query construction with support for search, filter, sort, pagination, and population.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
