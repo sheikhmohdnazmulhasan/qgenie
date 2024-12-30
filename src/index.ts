@@ -43,15 +43,18 @@ export class QueryBuilder<T extends Document> {
 
   /**
    * Adds search functionality using the provided fields and query string.
+   * Supports nested fields using dot notation.
    * @param fields - Array of fields to search
    * @returns this - The QueryBuilder instance
    */
-  search(fields: (keyof T)[] = []): this {
+  search(fields: (keyof T | string)[] = []): this {
     if (this.queryString.search) {
       const searchRegex = new RegExp(this.queryString.search, "i"); // Case-insensitive regex
-      const searchConditions: Record<string, any>[] = fields.map((field) => ({
-        [field as string]: searchRegex,
-      }));
+      const searchConditions: Record<string, any>[] = fields.map((field) => {
+        // Transform nested fields into MongoDB-compatible format
+        const transformedField = field.toString();
+        return { [transformedField]: searchRegex };
+      });
 
       if (searchConditions.length > 0) {
         if (this.isAggregation) {
