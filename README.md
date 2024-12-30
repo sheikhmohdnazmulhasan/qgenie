@@ -1,6 +1,6 @@
 # qgenie
 
-qgenie is a powerful and flexible query builder for Mongoose, designed to simplify complex querying operations in your Node.js applications.
+A powerful and customizable query builder for Mongoose, simplifying complex aggregation and query construction with support for search, filter, sort, pagination, population and aggregation.
 
 ## Installation
 
@@ -23,7 +23,7 @@ async function getItems(queryString: Record<string, any>) {
   const queryBuilder = new QueryBuilder(query, queryString);
 
   const result = await queryBuilder
-    .search(["name", "description"])
+    .search(["name", "description", "industry.name"])
     .filter()
     .sort()
     .paginate()
@@ -38,10 +38,12 @@ async function getItems(queryString: Record<string, any>) {
 
 ### Search
 
-Search across multiple fields:
+Search across multiple or nested fields:
 
 ```typescript
 queryBuilder.search(["name", "description"]);
+// combine nested fields:
+queryBuilder.search(["name", "description", "nested.field"]);
 ```
 
 ### Filter
