@@ -82,6 +82,13 @@ queryBuilder.populate("category");
 queryBuilder.populate(["category", "author"]);
 // or
 queryBuilder.populate([{ path: "category", select: "name" }]);
+// or
+queryBuilder.populate([{ path: "category", select: ["name", "status"] }]);
+// or
+queryBuilder.populate([
+  { path: "category", select: ["name", "status"] },
+  { path: "user" },
+]);
 ```
 
 ### Execute Query
