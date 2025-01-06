@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qgenie Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+        }
+        .feature {
+            background-color: #ecf0f1;
+            border-radius: 3px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>qgenie Documentation</h1>
+    </header>
+    <main>
+        <p>A powerful and customizable query builder for Mongoose, simplifying complex aggregation and query construction with support for search, filter, sort, pagination, population and aggregation.</p>
+
+        <h2>Installation</h2>
+        <p>To install qgenie, run the following command in your project directory:</p>
+        <pre><code>npm install qgenie</code></pre>
+
+        <h2>Usage</h2>
+        <p>Here's a basic example of how to use qgenie in your project:</p>
+        <pre><code>import { QueryBuilder } from "qgenie";
+import { YourMongooseModel } from "./your-model";
+
+async function getItems(queryString: Record<string, any>) {
+  const query = YourMongooseModel.find();
+  const queryBuilder = new QueryBuilder(query, queryString);
+
+  const result = await queryBuilder
+    .search(["name", "description", "industry.name"])
+    .filter()
+    .sort()
+    .paginate()
+    .populate("category")
+    .executeWithMetadata();
+
+  return result;
+}</code></pre>
+
+        <h2>Features</h2>
+
+        <div class="feature">
+            <h3>Search</h3>
+            <p>Search across multiple or nested fields:</p>
+            <pre><code>queryBuilder.search(["name", "description"]);
+// combine nested fields:
+queryBuilder.search(["name", "description", "nested.field"]);</code></pre>
+        </div>
+
+        <div class="feature">
+            <h3>Filter</h3>
+            <p>Apply filters based on query parameters:</p>
+            <pre><code>queryBuilder.filter();</code></pre>
+            <p>Supports operators like `gt`, `gte`, `lt`, `lte`, and `in`.</p>
+        </div>
+
+        <div class="feature">
+            <h3>Sort</h3>
+            <p>Sort results:</p>
+            <pre><code>queryBuilder.sort("-createdAt");</code></pre>
+        </div>
+
+        <div class="feature">
+            <h3>Paginate</h3>
+            <p>Paginate results:</p>
+            <pre><code>queryBuilder.paginate(10); // 10 items per page</code></pre>
+        </div>
+
+        <div class="feature">
+            <h3>Populate</h3>
+            <p>Populate related fields:</p>
+            <pre><code>queryBuilder.populate("category");
+// or
+queryBuilder.populate(["category", "author"]);
+// or
+queryBuilder.populate([{ path: "category", select: "name" }]);
+// or
+queryBuilder.populate([{ path: "category", select: ["name", "status"] }]);
+// or
+queryBuilder.populate([
+  { path: "category", select: ["name", "status"] },
+  { path: "user" },
+]);</code></pre>
+        </div>
+
+        <div class="feature">
+            <h3>Execute Query</h3>
+            <p>Execute the query:</p>
+            <pre><code>const data = await queryBuilder.exec();</code></pre>
+        </div>
+
+        <div class="feature">
+            <h3>Execute with Metadata</h3>
+            <p>Execute the query and get metadata:</p>
+            <pre><code>const { meta, data } = await queryBuilder.executeWithMetadata();</code></pre>
+        </div>
+
+        <div class="feature">
+            <h3>Aggregation</h3>
+            <p>Perform aggregation using qgenie:</p>
+            <pre><code>const aggregationPipeline = [
+  { $match: { status: "active" } },
+  { $group: { _id: "$category", total: { $sum: "$amount" } } },
+  { $sort: { total: -1 } },
+];
+
+const aggregatedResult = await queryBuilder.aggregate(aggregationPipeline);</code></pre>
+        </div>
+
+        <h2>Example</h2>
+        <p>Here's an example of a complex query string that demonstrates various features of qgenie:</p>
+        <pre><code>?search=smartphone&category=electronics&price[gte]=500&price[lte]=1000&inStock=true&sort=-price,name&page=2&limit=20&populate=manufacturer</code></pre>
+        <p>This query string does the following:</p>
+        <ol>
+            <li>Searches for "smartphone" in the specified search fields</li>
+            <li>Filters for items in the "electronics" category</li>
+            <li>Filters for items with a price between $500 and $1000</li>
+            <li>Filters for items that are in stock</li>
+            <li>Sorts results by price (descending) and then by name (ascending)</li>
+            <li>Requests the second page of results with 20 items per page</li>
+            <li>Populates the manufacturer field in the results</li>
+        </ol>
+        <p>Here's how you would use this query string with qgenie:</p>
+        <pre><code>import { QueryBuilder } from "qgenie";
+import { Product } from "./your-product-model";
+
+async function getProducts(queryString: Record<string, any>) {
+  const query = Product.find();
+  const queryBuilder = new QueryBuilder(query, queryString);
+
+  const result = await queryBuilder
+    .search(["name", "description"])
+    .filter()
+    .sort()
+    .paginate()
+    .populate("manufacturer")
+    .executeWithMetadata();
+
+  return result;
+}
+
+// Usage
+const queryString = {
+  search: "smartphone",
+  category: "electronics",
+  "price[gte]": "500",
+  "price[lte]": "1000",
+  inStock: "true",
+  sort: "-price,name",
+  page: "2",
+  limit: "20",
+  populate: "manufacturer",
+};
+
+const products = await getProducts(queryString);
+console.log(products);</code></pre>
+
+        <h3>Aggregation Example</h3>
+        <p>Here's an example demonstrating how to use the aggregation feature:</p>
+        <pre><code>import { QueryBuilder } from "qgenie";
+import { Order } from "./your-order-model";
+
+async function getSalesData() {
+  const query = Order.find();
+  const queryBuilder = new QueryBuilder(query, {});
+
+  const aggregationPipeline = [
+    { $match: { status: "completed" } },
+    { $group: { _id: "$region", totalSales: { $sum: "$amount" } } },
+    { $sort: { totalSales: -1 } },
+  ];
+
+  const aggregatedResult = await queryBuilder.aggregate(aggregationPipeline);
+
+  return aggregatedResult;
+}
+
+// Usage
+const salesData = await getSalesData();
+console.log(salesData);</code></pre>
+        <p>This example aggregates sales data by region, calculating the total sales amount for each region and sorting the results in descending order of total sales.</p>
+
+        <h2>API Reference</h2>
+        <h3>QueryBuilder&lt;T&gt;</h3>
+        <ul>
+            <li><code>constructor(modelQuery: ReturnType&lt;Model&lt;T&gt;["find"]&gt;, queryString: Record&lt;string, any&gt;)</code></li>
+            <li><code>search(fields: (keyof T)[]): this</code></li>
+            <li><code>filter(): this</code></li>
+            <li><code>sort(defaultSort: string): this</code></li>
+            <li><code>paginate(defaultLimit: number): this</code></li>
+            <li><code>populate(fields: string | string[] | Record&lt;string, any&gt;[]): this</code></li>
+            <li><code>aggregate(pipeline: Record&lt;string, any&gt;[]): Promise&lt;any[]&gt;</code></li>
+            <li><code>async exec(): Promise&lt;T[]&gt;</code></li>
+            <li><code>async executeWithMetadata(): Promise&lt;{ meta: { total: number, page: number, limit: number, totalPages: number }, data: T[] }&gt;</code></li>
+        </ul>
+    </main>
+</body>
+</html>
